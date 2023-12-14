@@ -1,3 +1,4 @@
+'use strict'
 const images = [
   {
     preview:
@@ -94,36 +95,4 @@ let gallery = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionPosition: 'bottom',
   captionDelay: 250,
-});
-
-// стилізую модалку через JS щоб не змінювати файли css в бібліотеці
-gallery.on('shown.simplelightbox', function () {
-  const textColor = 'rgba(255,255,255,1)';
-
-  const overlayEl = document.querySelector('.sl-wrapper');
-  overlayEl.style.backgroundColor = 'rgba(46, 47, 66, 0.8)';
-  overlayEl.style.color = textColor;
-
-  const btnCloseEl = document.querySelector('.sl-close');
-  btnCloseEl.style.width = '32px';
-  btnCloseEl.style.height = '32px';
-  btnCloseEl.style.color = textColor;
-
-  const btnPrevEl = document.querySelector('.sl-prev');
-  btnPrevEl.style.width = '24px';
-  btnPrevEl.style.height = '24px';
-  btnPrevEl.style.color = textColor;
-
-  const btnNextEl = document.querySelector('.sl-next');
-  btnNextEl.style.width = '24px';
-  btnNextEl.style.height = '24px';
-  btnNextEl.style.color = textColor;
-
-  const counterEl = document.querySelector('.sl-counter');
-  counterEl.style.color = textColor;
-  counterEl.style.fontSize = '16px';
-  counterEl.style.fontStyle = 'normal';
-  counterEl.style.fontWeight = '400';
-  counterEl.style.lineHeight = '1.5'; /* 150% */
-  counterEl.style.letterSpacing = '0.04em';
 });

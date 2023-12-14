@@ -1,5 +1,9 @@
 @import url('./reset.css');
 
+body {
+  background-color: lightgray;
+}
+
 .feedback-form {
   width: 408px;
   height: 296px;
