@@ -1,15 +1,17 @@
-const form = document.querySelector(".feedback-form");
-const formEmail = form.querySelector("input[name='email']");
-const formMessage = form.querySelector("textarea[name='message']");
+const form = document.querySelector('.feedback-form');
+const formEmail = form.querySelector("input");
+const formMessage = form.querySelector("textarea");
 
-let obj = JSON.parse(localStorage.getItem("feedback-form-state")) || {};
+
+let obj = JSON.parse(localStorage.getItem("feedback-form-state"));
 
 function setValue({ email, message }) {
-    formEmail.value = email || "";
-    formMessage.value = message || "";
+    formEmail.value = email;
+    formMessage.value = message;
 }
 
-setValue(obj);
+!obj ? obj = {} : setValue(obj);
+
 
 form.addEventListener('input', (event) => {
     const element = event.target.name;
@@ -20,14 +22,12 @@ form.addEventListener('input', (event) => {
 });
 
 form.addEventListener('submit', (event) => {
-    const emailValue = formEmail.value.trim();
-    const messageValue = formMessage.value.trim();
-
-    if (emailValue && messageValue) {
+    if (formEmail.value && formMessage.value) {
         event.preventDefault();
 
         localStorage.removeItem("feedback-form-state");
-        form.reset();
+        formEmail.value = '';
+        formMessage.value = '';
 
         console.log(obj);
     } else {
