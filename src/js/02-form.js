@@ -1,34 +1,49 @@
-const form = document.querySelector('.feedback-form');
-const formEmail = form.querySelector("input[name='email']");
-const formMessage = form.querySelector("textarea[name='message']");
+const feedbackForm = document.querySelector('.feedback-form');
+const userEmail = feedbackForm.querySelector('input[type="email"]');
+const userMessage = feedbackForm.querySelector('textarea');
 
-let obj = JSON.parse(localStorage.getItem("feedback-form-state")) || {};
+userEmail.value = '';
+userMessage.value = '';
 
-function setValue({ email, message }) {
-    formEmail.value = email || "";
-    formMessage.value = message || "";
+const userFeedback = {};
+
+const LS_FEEDBACK = 'feedback-form-state';
+
+if (localStorage.getItem(LS_FEEDBACK)) {
+    const parsedFeedback = JSON.parse(localStorage.getItem(LS_FEEDBACK));
+    
+    userFeedback.email = parsedFeedback.email;
+    userFeedback.message = parsedFeedback.message;
 }
 
-setValue(obj);
+feedbackForm.addEventListener('input', (event) => {
+    if (event.target.name === 'email') {
+        userFeedback.email = event.target.value;
+    }
 
-form.addEventListener('input', (event) => {
-    const element = event.target.name;
-    const value = event.target.value;
-    obj[element] = value;
+    if (event.target.name === 'message') {
+        userFeedback.message = event.target.value;
+    }
 
-    localStorage.setItem("feedback-form-state", JSON.stringify(obj));
+    const strUserFeedback = JSON.stringify(userFeedback);
+    localStorage.setItem(LS_FEEDBACK, strUserFeedback);
+
+    if (userFeedback.email === '' && userFeedback.message === '') {
+        localStorage.removeItem(LS_FEEDBACK);
+    }
 });
 
-form.addEventListener('submit', (event) => {
+feedbackForm.addEventListener('submit', (event) => {
+    const formEmail = feedbackForm.querySelector('input[type="email"]');
+    const formMessage = feedbackForm.querySelector('textarea');
+
     if (formEmail.value.trim() && formMessage.value.trim()) {
         event.preventDefault();
-
-        localStorage.removeItem("feedback-form-state");
-        formEmail.value = '';
-        formMessage.value = '';
-
-        console.log(obj);
+        localStorage.removeItem(LS_FEEDBACK);
+        userEmail.value = '';
+        userMessage.value = '';
+        console.log(userFeedback);
     } else {
-        alert("Заповніть усі поля");
+        alert('Заповніть усі поля');
     }
 });
