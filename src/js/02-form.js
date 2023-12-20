@@ -2,48 +2,70 @@ const feedbackForm = document.querySelector('.feedback-form');
 const userEmail = feedbackForm.querySelector('input[type="email"]');
 const userMessage = feedbackForm.querySelector('textarea');
 
-userEmail.value = '';
-userMessage.value = '';
-
-const userFeedback = {};
-
 const LS_FEEDBACK = 'feedback-form-state';
 
-if (localStorage.getItem(LS_FEEDBACK)) {
-    const parsedFeedback = JSON.parse(localStorage.getItem(LS_FEEDBACK));
-    
-    userFeedback.email = parsedFeedback.email;
-    userFeedback.message = parsedFeedback.message;
+// Функція для отримання даних з локального сховища
+function getFromStorage() {
+    const storedData = localStorage.getItem(LS_FEEDBACK);
+    return storedData ? JSON.parse(storedData) : {};
 }
 
+// Прослуховування події "input" для відстеження введення
 feedbackForm.addEventListener('input', (event) => {
+    // Спочатку отримуємо поточні дані з локального сховища
+    const userFeedback = getFromStorage();
+
+    // Оновлюємо об'єкт userFeedback залежно від події "input"
     if (event.target.name === 'email') {
-        userFeedback.email = event.target.value;
+        userFeedback.email = event.target.value.trim();
     }
 
     if (event.target.name === 'message') {
-        userFeedback.message = event.target.value;
+        userFeedback.message = event.target.value.trim();
     }
 
-    const strUserFeedback = JSON.stringify(userFeedback);
-    localStorage.setItem(LS_FEEDBACK, strUserFeedback);
-
-    if (userFeedback.email === '' && userFeedback.message === '') {
-        localStorage.removeItem(LS_FEEDBACK);
-    }
+    // Зберігаємо оновлені дані у локальному сховищі
+    localStorage.setItem(LS_FEEDBACK, JSON.stringify(userFeedback));
 });
 
+// Прослуховування події "submit" для обробки відправки форми
 feedbackForm.addEventListener('submit', (event) => {
-    const formEmail = feedbackForm.querySelector('input[type="email"]');
-    const formMessage = feedbackForm.querySelector('textarea');
+    // Забираємо дані з локального сховища
+    const parsedFeedback = getFromStorage();
 
-    if (formEmail.value.trim() && formMessage.value.trim()) {
+    // Використовуємо дані форми або дані з локального сховища для виводу
+    const obj = {
+        email: userEmail.value.trim(),
+        message: userMessage.value.trim(),
+    };
+
+    if (obj.email && obj.message) {
         event.preventDefault();
+        // Очищуємо локальне сховище
         localStorage.removeItem(LS_FEEDBACK);
+        // Очищуємо поля форми
         userEmail.value = '';
         userMessage.value = '';
-        console.log(userFeedback);
+
+        console.log('object:', obj);
     } else {
         alert('Заповніть усі поля');
     }
+});
+
+// Прослуховування події "load" для встановлення даних з локального сховища при завантаженні сторінки
+window.addEventListener('load', (event) => {
+    // Отримуємо дані з локального сховища при завантаженні сторінки
+    const parsedFeedback = getFromStorage();
+
+    // Встановлюємо значення полів форми на основі отриманих даних
+    if (parsedFeedback.hasOwnProperty('email')) {
+        userEmail.value = parsedFeedback.email;
+    }
+
+    if (parsedFeedback.hasOwnProperty('message')) {
+        userMessage.value = parsedFeedback.message;
+    }
+
+    console.log('got from storage on load: ', parsedFeedback);
 });
