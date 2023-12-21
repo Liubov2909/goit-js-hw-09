@@ -49,7 +49,7 @@ feedbackForm.addEventListener('submit', (event) => {
 
         console.log('object:', obj);
     } else {
-        alert('Заповніть усі поля');
+        alert('Please fill in all fields');
     }
 });
 
@@ -65,7 +65,5 @@ window.addEventListener('load', (event) => {
 
     if (parsedFeedback.hasOwnProperty('message')) {
         userMessage.value = parsedFeedback.message;
-    }
-
-    console.log('got from storage on load: ', parsedFeedback);
+    }    
 });

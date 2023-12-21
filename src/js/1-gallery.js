@@ -1,4 +1,6 @@
-'use strict'
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 const images = [
   {
     preview:
@@ -64,35 +66,26 @@ const images = [
     description: 'Lighthouse Coast Sea',
   },
 ];
-// Описаний в документації
-import SimpleLightbox from 'simplelightbox';
-// Додатковий імпорт стилів
-import 'simplelightbox/dist/simple-lightbox.min.css';
 
-let galleryHTML = images.reduce((acc, element) => {
-  return (acc += `
-    <a class="gallery-link" href="${element.original}">
-      <img
-        class="gallery-image"
-        src="${element.preview}"
-        alt="${element.description}"
-      />
-    </a>`);
-}, '');
-
-galleryHTML = `<div class="gallery">
-            ${galleryHTML}
-</div>`;
+let galleryHTML = images.map(({ preview, original, description }) => {
+  return `
+    <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+            <img
+                class="gallery-image"
+                src="${preview}"
+                alt="${description}"
+            />
+        </a>
+    </li>
+    `
+  }).join('');
 
 document
-  .querySelector('.main-section')
+  .querySelector('.gallery')
   .insertAdjacentHTML('beforeend', galleryHTML);
 
-let gallery = new SimpleLightbox('.gallery a', {
-  captions: true,
-  captionSelector: 'img',
-  captionType: 'attr',
-  captionsData: 'alt',
-  captionPosition: 'bottom',
+let gallery = new SimpleLightbox('.gallery a', {  
+  captionsData: 'alt',  
   captionDelay: 250,
 });
